@@ -1,11 +1,55 @@
-
-
+from bs4 import BeautifulSoup
 import requests
 import pandas as pd
 
 
+count = range(100)
+page_num = count[::8]
 
+c1 = soup.find_all('span', class_="pull-left width-33 title al")
+for i in page_num:
+    html= "http://delhihighcourt.nic.in/dhc_case_status_list_new.asp?ayear=&pyear=&SNo=1&SRecNo={}&dno=&dyear=&ctype=ALL&cno=&cyear=1980&party=&adv=".format(i)
+    x = requests.get(html)
+    soup = BeautifulSoup(x.text)
+    page_c1 =[i.text for i in c1]
 
+c2 = soup.find_all('span', class_="pull-left width-30 title al")
+for i in page_num:
+    html= "http://delhihighcourt.nic.in/dhc_case_status_list_new.asp?ayear=&pyear=&SNo=1&SRecNo={}&dno=&dyear=&ctype=ALL&cno=&cyear=1980&party=&adv=".format(i)
+    x = requests.get(html)
+    soup = BeautifulSoup(x.text)
+    page_c2 =[i.text for i in c2]
+
+c3 = soup.find_all('span', class_="pull-left width-30 title al last")
+for i in page_num:
+    html= "http://delhihighcourt.nic.in/dhc_case_status_list_new.asp?ayear=&pyear=&SNo=1&SRecNo={}&dno=&dyear=&ctype=ALL&cno=&cyear=1980&party=&adv=".format(i)
+    x = requests.get(html)
+    soup = BeautifulSoup(x.text)
+    page_c3 = [i.text for i in c3]
+
+# Initialize pandas DataFrame
+data = pd.DataFrame()
+
+data['1'] = page_c1
+data['2'] = page_c2
+data['3'] = page_c3
+
+def reduce_space(data):
+    data = map(lambda x: x.replace(' ', ''), data)
+    data = map(lambda x: x.replace('\r', ''), data)
+    data = map(lambda x: x.replace('\n', ''), data)
+    data = map(lambda x: x.replace('\t', ''), data)
+    return data
+
+data['1'] = reduce_space(data['1'])
+data['2'] = reduce_space(data['2'])
+data['3'] = reduce_space(data['3'])
+
+new_header = data.iloc[0]
+data = data[1:]
+data.columns = new_header
+
+print data
 
 '''
 url = "http://delhihighcourt.nic.in/dhc_case_status_list_new.asp?ayear=&pyear=&SNo=1&SRecNo=0&dno=&dyear=&ctype=ALL&cno=&cyear=1980&party=&adv="
@@ -28,7 +72,7 @@ for i in soup.find_all('span', class_="pull-left width-33 title al"):
         data = map[lambda x: x.replace('t/', ''), i.text]
         g_data.append(i.text)
 print g_data
-    
+
 
 
 

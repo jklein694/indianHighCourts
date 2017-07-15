@@ -3,29 +3,27 @@ import requests
 import pandas as pd
 
 
-count = range(100)
+count = range(1000)
 page_num = count[::8]
 
+page_c1 = []
+page_c2 = []
+page_c3 = []
+
 c1 = soup.find_all('span', class_="pull-left width-33 title al")
-for i in page_num:
-    html= "http://delhihighcourt.nic.in/dhc_case_status_list_new.asp?ayear=&pyear=&SNo=1&SRecNo={}&dno=&dyear=&ctype=ALL&cno=&cyear=1980&party=&adv=".format(i)
-    x = requests.get(html)
-    soup = BeautifulSoup(x.text)
-    page_c1 =[i.text for i in c1]
-
 c2 = soup.find_all('span', class_="pull-left width-30 title al")
-for i in page_num:
-    html= "http://delhihighcourt.nic.in/dhc_case_status_list_new.asp?ayear=&pyear=&SNo=1&SRecNo={}&dno=&dyear=&ctype=ALL&cno=&cyear=1980&party=&adv=".format(i)
-    x = requests.get(html)
-    soup = BeautifulSoup(x.text)
-    page_c2 =[i.text for i in c2]
-
 c3 = soup.find_all('span', class_="pull-left width-30 title al last")
 for i in page_num:
     html= "http://delhihighcourt.nic.in/dhc_case_status_list_new.asp?ayear=&pyear=&SNo=1&SRecNo={}&dno=&dyear=&ctype=ALL&cno=&cyear=1980&party=&adv=".format(i)
     x = requests.get(html)
     soup = BeautifulSoup(x.text)
-    page_c3 = [i.text for i in c3]
+    for n in c1:
+        page_c1.append(n.text)
+    for n in c2:
+        page_c2.append(n.text)
+    for n in c3:
+        page_c3.append(n.text)
+
 
 # Initialize pandas DataFrame
 data = pd.DataFrame()
@@ -51,7 +49,7 @@ data.columns = new_header
 
 print data
 
-data.to_csv('Dehli.csv')
+data.to_excel('Delhi.xls')
 
 '''
 url = "http://delhihighcourt.nic.in/dhc_case_status_list_new.asp?ayear=&pyear=&SNo=1&SRecNo=0&dno=&dyear=&ctype=ALL&cno=&cyear=1980&party=&adv="

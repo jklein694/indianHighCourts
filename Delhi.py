@@ -51,6 +51,8 @@ data.columns = new_header
 
 print data
 
+data.to_csv('Dehli.csv')
+
 '''
 url = "http://delhihighcourt.nic.in/dhc_case_status_list_new.asp?ayear=&pyear=&SNo=1&SRecNo=0&dno=&dyear=&ctype=ALL&cno=&cyear=1980&party=&adv="
 r = requests.get(url)
